@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Computer Vision Image Classification using Transfer Learning is an application of the Tensorflow library with a rock paper scissors dataset. The application of the Tensorflow library uses Transfer Learning or readily available models. Then the model results are exported into TensorflowJS. "
+    />
+    <meta name="keywords" content="tensorflow, tensorflowjs, tailwindcss" />
+    <meta name="author" content="Muhammad Ridho Isdi" />
+    <link rel="shortcut icon" href="./assets/logo.svg" type="image/svg" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>CV: Image Classification</title>
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+  </head>
+  <body>
+    <div
+      class="fixed top-0 bottom-0 z-10 w-full hidden place-items-center bg-slate-950/80"
+      id="loading"
+    >
+      <div>
+        <svg
+          class="animate-spin w-20 h-20 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        <p class="text-white text-xl">Loading...</p>
+      </div>
+    </div>
+    <nav class="bg-[hsl(222.2,47.4%,11.2%)]">
+      <div
+        class="flex flex-wrap items-center justify-between mx-auto md:px-16 px-4 py-4"
+      >
+        <a
+          href="https://mrisdi.vercel.app"
+          class="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img src="./assets/logo.svg" class="h-8" alt="Flowbite Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap text-[hsl(217.2,91.2%,59.8%)]"
+            >MRIsdi</span
+          >
+        </a>
+        <div class="block w-auto" id="navbar-default">
+          <ul
+            class="font-medium flex md:p-4 md:p-0 mt-4 rounded-lg flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0"
+          >
+            <li>
+              <button
+                class="block py-2 px-3 rounded md:bg-transparent md:p-0 text-[hsl(217.2,91.2%,59.8%)]"
+                id="buttonVideo"
+              >
+                Video
+              </button>
+            </li>
+            <li>
+              <button
+                class="block py-2 px-3 text-[hsl(217.2,91.2%,59.8%)] rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:p-0"
+                id="buttonImage"
+              >
+                Gambar
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main
+      class="flex flex-wrap justify-between flex-row md:px-16 px-4 py-4 md:gap-0 gap-4 bg-[hsl(222.2,84%,4.9%)]"
+    >
+      <div class="md:basis-3/5 basis-full flex flex-col items-start gap-4">
+        <div class="flex justify-between w-full">
+          <p class="text-xl font-bold text-[hsl(217.2,91.2%,59.8%)]">
+            Tipe kulit wajah: <span id="tipe"></span>
+          </p>
+          <p class="text-xl font-bold text-[hsl(217.2,91.2%,59.8%)]">
+            Score: <span id="score"></span>
+          </p>
+        </div>
+        <div
+          class="border border-[hsl(217.2,32.6%,17.5%)] min-h-96 w-full rounded-2xl p-4 text-white"
+          id="bot"
+        ></div>
+      </div>
+      <div
+        class="basis-2/5 flex-col md:items-end gap-4 hidden"
+        id="containerVideo"
+      >
+        <p class="text-xl font-bold text-[hsl(217.2,91.2%,59.8%)]">
+          Klasifikasi Tipe Kulit Permukaan Wajah Manusia
+        </p>
+        <div
+          class="relative md:w-[450px] w-[300px] md:h-[450px] h-[300px] p-[5px] border border-[rgba(255,255,255,0.3)] rounded-xl bg-[rgba(255,255,255,0)] shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[6.2px]"
+        >
+          <video
+            src=""
+            id="video"
+            width="448"
+            height="448"
+            class="md:w-[448px] w-[290px] md:h-[448px] h-[290px]"
+          ></video>
+        </div>
+        <div class="md:w-[450px] w-[300px] flex justify-between">
+          <button
+            class="w-[120px] h-[40px] rounded-lg text-white font-bold bg-green-400"
+            id="startVideo"
+          >
+            Start
+          </button>
+          <button
+            class="w-[120px] h-[40px] rounded-lg text-white font-bold bg-red-400"
+            id="stopVideo"
+          >
+            Stop
+          </button>
+        </div>
+      </div>
+      <div
+        class="basis-2/5 flex flex-col md:items-end gap-4"
+        id="containerImage"
+      >
+        <p class="text-xl font-bold text-[hsl(217.2,91.2%,59.8%)]">
+          Klasifikasi Tipe Kulit Permukaan Wajah Manusia
+        </p>
+        <div
+          class="relative md:w-[450px] w-[300px] md:h-[450px] h-[300px] border border-[rgba(255,255,255,0.3)] rounded-xl bg-[rgba(255,255,255,0)] shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-[6.2px]"
+        >
+          <img
+            src=""
+            alt="logo"
+            class="hidden rounded-2xl md:w-[450px] w-[300px] md:h-[450px] h-[300px]"
+            id="image"
+          />
+          <canvas
+            class="rounded-2xl absolute top-0 md:w-[448px] w-[290px]"
+            width="640"
+            height="640"
+            id="canvas-image"
+          >
+          </canvas>
+        </div>
+        <div class="md:w-[450px] w-[300px] flex justify-between">
+          <button
+            class="flex items-center justify-center gap-2 w-[120px] h-[40px] rounded-lg text-white font-bold bg-cyan-400"
+            id="btn-file-image"
+          >
+            <i class="bx bx-upload text-2xl"></i>
+            <span>Upload</span>
+          </button>
+          <button
+            class="flex items-center justify-center gap-2 w-[120px] h-[40px] rounded-lg text-white font-bold bg-green-400"
+            id="btn-show-image"
+          >
+            <i class="bx bx-show text-2xl"></i>
+            <span>Classify</span>
+          </button>
+        </div>
+        <input
+          type="file"
+          name="image"
+          id="file-image"
+          accept="image/*"
+          class="hidden"
+        />
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

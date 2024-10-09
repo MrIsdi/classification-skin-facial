@@ -1,0 +1,17 @@
+description: Ultralytics YOLO11m-cls model trained on /content/skin-facial-yolo-1
+author: Ultralytics
+date: '2024-10-07T02:18:55.031933'
+version: 8.3.6
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 1
+task: classify
+batch: 1
+imgsz:
+- 224
+- 224
+names:
+  0: berminyak
+  1: kering
+  2: normal
+  3: tidak_terdeteksi
